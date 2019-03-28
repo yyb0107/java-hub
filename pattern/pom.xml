@@ -18,6 +18,8 @@
     <modules>
         <module>pattern-singleton</module>
         <module>pattern-factory</module>
+        <module>pattern-prototype</module>
+        <module>pattern-proxy</module>
     </modules>
 
     <dependencies>
