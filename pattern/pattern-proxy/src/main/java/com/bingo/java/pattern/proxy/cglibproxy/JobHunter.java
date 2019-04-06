@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
  */
 public class JobHunter implements MethodInterceptor {
     public Object getInstance(Class clazz) {
+        //这里就是生成代理对象的代码
         Enhancer enhancer = new Enhancer();
         enhancer.setSuperclass(clazz);
         enhancer.setCallback(this);

@@ -28,6 +28,4 @@ public class JobHunter {
     private void before() {
         System.out.println("根据需求搜集信息……");
     }
-    
-    
 }
