@@ -20,6 +20,7 @@
         <module>pattern-factory</module>
         <module>pattern-prototype</module>
         <module>pattern-proxy</module>
+        <module>pattern-delegate</module>
     </modules>
 
     <dependencies>
