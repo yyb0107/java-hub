@@ -22,6 +22,7 @@
         <module>pattern-proxy</module>
         <module>pattern-delegate</module>
         <module>pattern-strategy</module>
+        <module>pattern-template</module>
     </modules>
 
     <dependencies>
