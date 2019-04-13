@@ -23,6 +23,7 @@
         <module>pattern-delegate</module>
         <module>pattern-strategy</module>
         <module>pattern-template</module>
+        <module>pattern-adapter</module>
     </modules>
 
     <dependencies>

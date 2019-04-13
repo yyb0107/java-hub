@@ -19,9 +19,17 @@ public class TemplateTest {
         ps.setProperty("username", "root");
         ps.setProperty("password", "password");
 
+        // use by extends
         UserDao userDao =new UserDao(ps);
         List<User> result = userDao.selectAll();
         for (User user : result) {
+            System.out.println(user);
+        }
+
+        //use by composite
+        UserDaoByComposite userDaoByComposite = new UserDaoByComposite(ps);
+        List<User> result2 = userDaoByComposite.selectAll();
+        for (User user : result2) {
             System.out.println(user);
         }
 

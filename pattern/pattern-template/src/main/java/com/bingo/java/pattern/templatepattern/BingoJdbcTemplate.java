@@ -10,7 +10,7 @@ import java.util.Properties;
  * @title: BingoJdbcTemplate
  * @projectName java-hub
  */
-public abstract class BingoJdbcTemplate {
+public class BingoJdbcTemplate {
     private String driverClassName;
     private String url;
     private String username;
