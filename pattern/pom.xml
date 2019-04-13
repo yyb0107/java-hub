@@ -25,6 +25,7 @@
         <module>pattern-template</module>
         <module>pattern-adapter</module>
         <module>pattern-wrapper</module>
+        <module>pattern-observer</module>
     </modules>
 
     <dependencies>
