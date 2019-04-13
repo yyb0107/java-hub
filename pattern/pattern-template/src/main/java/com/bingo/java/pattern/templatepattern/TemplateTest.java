@@ -15,7 +15,7 @@ public class TemplateTest {
     public static void main(String[] args) throws SQLException, ClassNotFoundException {
         Properties ps = new Properties();
         ps.setProperty("driverClassName", "com.mysql.jdbc.Driver");
-        ps.setProperty("url", "jdbc:mysql://localhost/emp");
+        ps.setProperty("url", "jdbc:mysql://localhost/db1");
         ps.setProperty("username", "root");
         ps.setProperty("password", "password");
 

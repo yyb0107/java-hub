@@ -14,9 +14,9 @@ public class UserMapper implements RowMapper<User>{
     @Override
     public User mapper(ResultSet rs) throws SQLException {
         User user = new User();
-        user.setUname(rs.getString("uname"));
-        user.setSex(rs.getInt("sex"));
-        user.setUid(rs.getString("uid"));
+        user.setUid(rs.getString("userid"));
+        user.setUname(rs.getString("username"));
+//        user.setUid(rs.getString("uid"));
         return user;
     }
 }

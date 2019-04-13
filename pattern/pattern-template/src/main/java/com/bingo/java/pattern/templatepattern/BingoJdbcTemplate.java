@@ -30,8 +30,8 @@ public abstract class BingoJdbcTemplate {
     //1. 获取db connection
 
     protected Connection connection() throws ClassNotFoundException, SQLException {
-        Class clazz = Class.forName("");
-        Connection connection = DriverManager.getConnection("url", "username", "password");
+        Class clazz = Class.forName(driverClassName);
+        Connection connection = DriverManager.getConnection(url, username, password);
         this.connection = connection;
         return connection;
     }

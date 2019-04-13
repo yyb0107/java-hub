@@ -17,6 +17,6 @@ public class UserDao extends BingoJdbcTemplate {
     }
 
     public List<User> selectAll() throws SQLException, ClassNotFoundException {
-        return query(new UserMapper(), "select * from user");
+        return query(new UserMapper(), "select * from t_user");
     }
 }
