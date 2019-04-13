@@ -19,7 +19,7 @@ public  static IFruit getFruitV0(String name) {
         return fruit;
     }
 ```
-![简单工厂](./imgs/SimpleFactory.png)
+![简单工厂](./docs/imgs/SimpleFactory.png)
 
 ### 工厂方法模式
 ```java
@@ -33,7 +33,7 @@ public static void main(String[] args) {
         fruit.taste();
     }
 ```
-![工厂方法](./imgs/FactoryMethodFactory.png)
+![工厂方法](./docs/imgs/FactoryMethodFactory.png)
 
 ### 抽象工厂模式
 ```java
