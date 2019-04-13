@@ -281,4 +281,4 @@ public class ContainerSingleton {
 
 ###### 附内部类单例模式的时序图
 
-![Screen Shot](./img/inner_class_load_sequence.png)
+![Screen Shot](docs/img/inner_class_load_sequence.png)
