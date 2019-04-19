@@ -26,6 +26,11 @@ public class UserController {
         return "The Name Is "+name;
     }
 
+    @BGRequestMapping("/add")
+    public String showName(HttpServletRequest req, HttpServletResponse resp, @BGRequestParam("a")String a,@BGRequestParam("b")String b){
+        return "The Result Is "+(Integer.parseInt(a)+Integer.parseInt(b));
+    }
+
     public void setService(UserService service) {
         this.service = service;
     }

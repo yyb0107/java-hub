@@ -44,6 +44,11 @@ public class BGDispatcherServlet extends HttpServlet {
         doGet(req,resp);
     }
 
+    /**
+     * 解析http请求  找到uri对应的方法
+     * @param req
+     * @param resp
+     */
     private void doDispather(HttpServletRequest req, HttpServletResponse resp) {
         String uri = req.getRequestURI();
         String key = uri.replace(req.getContextPath(), "");
@@ -126,7 +131,8 @@ public class BGDispatcherServlet extends HttpServlet {
                     subPath = ((BGRequestMapping) method.getAnnotation(BGRequestMapping.class)).value();
                     //拼接url
                     String url = (basePath + "/" + subPath).replaceAll("//*", "/");
-
+                    if(requestHandlerMapping.get(url)!=null) continue;
+                    System.out.println(String.format("rqeust[%s] mapped with handler[%s]", url,clazz.getSimpleName()));
                     requestHandlerMapping.put(url, method);
                 }
 
