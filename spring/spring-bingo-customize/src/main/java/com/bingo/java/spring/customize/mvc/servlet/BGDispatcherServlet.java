@@ -1,6 +1,7 @@
 package com.bingo.java.spring.customize.mvc.servlet;
 
 import com.bingo.java.spring.customize.mvc.annotation.*;
+import com.bingo.java.spring.customize.mvc.converter.Converter;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -9,14 +10,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Pattern;
 
 /**
  * @author Bingo
@@ -32,6 +31,8 @@ public class BGDispatcherServlet extends HttpServlet {
     final Map<String, Object> IOC = new HashMap<>();
 
     final Map<String, Method> requestHandlerMapping = new HashMap<>();
+
+    final Map<String, Converter> converters = new HashMap<>();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -55,9 +56,11 @@ public class BGDispatcherServlet extends HttpServlet {
         PrintWriter writer = null;
         try {
             writer = resp.getWriter();
+            //如果url找到了可以找到对应的的处理方法
             if (requestHandlerMapping.get(key) != null) {
                 Method method = requestHandlerMapping.get(key);
                 Parameter[] parameters = method.getParameters();
+                //方法的实参列表
                 ArrayList<Object> paramList = new ArrayList<>();
                 for(Parameter parameter:parameters){
                     if(parameter.getType().getName().endsWith("Request")){
@@ -70,7 +73,10 @@ public class BGDispatcherServlet extends HttpServlet {
                     }
                     if(parameter.isAnnotationPresent(BGRequestParam.class)){
                         String paramName = ((BGRequestParam)parameter.getAnnotation(BGRequestParam.class)).value();
-                        paramList.add(req.getParameter(paramName));
+                        String paramValue = req.getParameter(paramName);
+                        //新增参数的类型转换，将转换的逻辑从controller 转到这里来
+                        Object paramValueAfterConvert = convert(paramValue, parameter.getType());
+                        paramList.add(paramValueAfterConvert);
                     }
 
                 }
@@ -89,6 +95,56 @@ public class BGDispatcherServlet extends HttpServlet {
         }
 
 
+    }
+
+//将reqeust获取的参数按照对应方法参数类型进行转化
+    private Object convert(String paramValue, Class<?> type) {
+//首先看目标类型是否为String
+        if (type == String.class) return paramValue;
+        //如果不是  先初始化converter
+        if (converters.isEmpty()) {
+            initConverters(Converter.class);
+        }
+        //根据实际的type 获取对应的convert  执行convert方法
+        Converter converter = converters.get(type.getName() );
+        if(converter == null) return null;
+        return converter.convert(paramValue, type);
+    }
+
+    private void initConverters(Class<Converter> baseClass) {
+        Pattern pattern = Pattern.compile("<(.*),(.*)>");
+        String packagePath = baseClass.getPackage().getName().replaceAll("\\.", "\\\\");
+        String basePath = baseClass.getClassLoader().getResource("").getPath();
+        File file = new File(basePath + "/" + packagePath);
+        File[] files = file.listFiles();
+        if (files == null) return;
+        String className = null;
+        try {
+            for (File f : files) {
+                className = baseClass.getPackage().getName() + "." + f.getName().substring(0, f.getName().length() - 6);
+                Class clazz = Class.forName(className);
+                //接下来获取当前类实现的接口 接口中有泛型的定义，在这里获取实际的类型
+                //注意 如果在运行时 当前类仍然不知道泛型的具体类型，则会抛出ClassCastException
+                if (!clazz.isInterface()) {
+                    Type type = clazz.getGenericInterfaces()[0];
+                    if (type instanceof ParameterizedType) {
+                        Type[] actualTypes = ((ParameterizedType) type).getActualTypeArguments();
+                        if (actualTypes.length < 2) continue;
+                        Object obj = clazz.newInstance();
+                        if (obj instanceof Converter) {
+                            converters.put(actualTypes[1].getTypeName(), (Converter) obj);
+                        }
+                    }
+
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -207,6 +263,7 @@ public class BGDispatcherServlet extends HttpServlet {
                                 Method method = obj.getClass().getMethod("value", null);
                                 aliasName = "" + method.invoke(obj, null);
                                 if (aliasName != null && aliasName.length() > 1) {
+                                    if(IOC.get(aliasName)!=null) throw new RuntimeException(String.format("the aliasName[%s] exists ,cannot instance twice",aliasName));
                                     IOC.put(aliasName, bean);
                                     aliasName = null;
                                 }

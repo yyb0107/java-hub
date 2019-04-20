@@ -27,8 +27,13 @@ public class UserController {
     }
 
     @BGRequestMapping("/add")
-    public String showName(HttpServletRequest req, HttpServletResponse resp, @BGRequestParam("a")String a,@BGRequestParam("b")String b){
+    public String add( @BGRequestParam("a")String a,@BGRequestParam("b")String b){
         return "The Result Is "+(Integer.parseInt(a)+Integer.parseInt(b));
+    }
+
+    @BGRequestMapping("/sub")
+    public String sub( @BGRequestParam("a")Integer a,@BGRequestParam("b")Integer b){
+        return "The Result Is "+(a-b);
     }
 
     public void setService(UserService service) {
