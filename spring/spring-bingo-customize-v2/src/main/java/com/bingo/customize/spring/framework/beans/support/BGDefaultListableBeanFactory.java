@@ -1,4 +1,6 @@
-package com.bingo.customize.spring.framework.beans;
+package com.bingo.customize.spring.framework.beans.support;
+
+import com.bingo.customize.spring.framework.beans.config.BGBeanDefinition;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -13,4 +15,5 @@ public abstract class BGDefaultListableBeanFactory{
  * Map of bean definition objects, keyed by bean name.
  */
 private final Map<String, BGBeanDefinition> beanDefinitionMap=new ConcurrentHashMap<>();
+
 }
