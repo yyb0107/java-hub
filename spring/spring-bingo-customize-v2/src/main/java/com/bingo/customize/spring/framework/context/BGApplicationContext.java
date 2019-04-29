@@ -1,7 +1,10 @@
 package com.bingo.customize.spring.framework.context;
 
+import com.bingo.customize.spring.framework.beans.config.BGBeanDefinition;
 import com.bingo.customize.spring.framework.beans.support.BGBeanDefinitionReader;
 import com.bingo.customize.spring.framework.context.support.BGAbstractApplicationContext;
+
+import java.util.List;
 
 /**
  * @author Bingo
@@ -10,6 +13,7 @@ import com.bingo.customize.spring.framework.context.support.BGAbstractApplicatio
  */
 public class BGApplicationContext extends BGAbstractApplicationContext {
     private String[] configLocation;
+    private List<BGBeanDefinition> bgBeanDefinitions;
 
     public BGApplicationContext(String... configLocation){
         this.configLocation = configLocation;
@@ -27,8 +31,18 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
         BGBeanDefinitionReader reader =new BGBeanDefinitionReader(configLocation[0]);
 
         //加载
-        reader.loadBeanDefinitions();
+        bgBeanDefinitions = reader.loadBeanDefinitions();
 
         //注册
+        registerBGBeanDeinition(bgBeanDefinitions);
+    }
+
+    private void registerBGBeanDeinition(List<BGBeanDefinition> bgBeanDefinitions) {
+        for (BGBeanDefinition bgBeanDefinition : bgBeanDefinitions) {
+            if(getBeanDfinitionMap().get(bgBeanDefinition.getFactoryBeanName())!=null){
+                new RuntimeException(String.format("bean[%s] was existed",bgBeanDefinition.getFactoryBeanName()));
+            }
+            getBeanDfinitionMap().put(bgBeanDefinition.getFactoryBeanName(),bgBeanDefinition);
+        }
     }
 }
