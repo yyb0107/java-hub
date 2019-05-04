@@ -17,8 +17,33 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
      */
     private final Map<String, BGBeanDefinition> beanDefinitionMap=new ConcurrentHashMap<>();
 
+//    private
+
     public Map<String, BGBeanDefinition> getBeanDfinitionMap() {
         return beanDefinitionMap;
+    }
+
+    protected BGBeanWrapper instantiateBean(final String beanName, final BGBeanDefinition bd) {
+        String className = bd.getBeanClassName();
+        BGBeanWrapper bgBeanWrapper = null;
+        try {
+            Class<?> clazz = Class.forName(className);
+            Object obj = clazz.newInstance();
+            bgBeanWrapper = new BGBeanWrapper();
+            bgBeanWrapper.setWrappedInstance(obj);
+            return bgBeanWrapper;
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (InstantiationException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    protected void populateBean(String beanName, BGBeanDefinition mbd, BGBeanWrapper bw) {
+
     }
 
 }

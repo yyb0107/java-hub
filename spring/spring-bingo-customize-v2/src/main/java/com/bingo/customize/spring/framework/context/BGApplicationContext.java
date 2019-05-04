@@ -2,6 +2,7 @@ package com.bingo.customize.spring.framework.context;
 
 import com.bingo.customize.spring.framework.beans.config.BGBeanDefinition;
 import com.bingo.customize.spring.framework.beans.support.BGBeanDefinitionReader;
+import com.bingo.customize.spring.framework.beans.support.BGBeanWrapper;
 import com.bingo.customize.spring.framework.context.support.BGAbstractApplicationContext;
 
 import java.util.List;
@@ -21,6 +22,15 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
 
     @Override
     public Object getBean(String beanName) {
+        BGBeanDefinition bgBeanDefinition = getBeanDfinitionMap().get(beanName);
+        if(bgBeanDefinition == null) return null;
+
+        //1.instantiateBean
+        BGBeanWrapper bgBeanWrapper = instantiateBean(beanName, bgBeanDefinition);
+
+        //2.populateBean
+
+        populateBean(beanName,bgBeanDefinition,bgBeanWrapper);
         return null;
     }
 
@@ -35,6 +45,17 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
 
         //注册
         registerBGBeanDeinition(bgBeanDefinitions);
+
+        //对非lazy bean 开始初始化
+        doBeanAutoWired();
+    }
+
+    private void doBeanAutoWired() {
+        getBeanDfinitionMap().forEach((key,definition)->{
+            if(!definition.isInitLazy()){
+                getBean(key);
+            }
+        });
     }
 
     private void registerBGBeanDeinition(List<BGBeanDefinition> bgBeanDefinitions) {
