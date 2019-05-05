@@ -15,5 +15,6 @@ public class BGBeanDefinition {
     private String beanClassName;
     private String factoryBeanName;
     private boolean isInitLazy;
+    private boolean isSingleton;
 
 }

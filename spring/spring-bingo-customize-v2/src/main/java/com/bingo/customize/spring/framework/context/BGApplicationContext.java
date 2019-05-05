@@ -28,8 +28,11 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
         //1.instantiateBean
         BGBeanWrapper bgBeanWrapper = instantiateBean(beanName, bgBeanDefinition);
 
-        //2.populateBean
+        if(bgBeanDefinition.isSingleton()){
+            addSingletonObjects(beanName,bgBeanWrapper.getWrappedInstance());
+        }
 
+        //2.populateBean
         populateBean(beanName,bgBeanDefinition,bgBeanWrapper);
         return null;
     }
