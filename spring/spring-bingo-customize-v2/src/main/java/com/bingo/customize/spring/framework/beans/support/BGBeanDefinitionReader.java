@@ -35,6 +35,7 @@ public class BGBeanDefinitionReader {
             properties.load(fis);
         }
 
+        doLoadConfig();
     }
 
     /**

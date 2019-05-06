@@ -3,7 +3,10 @@ package com.bingo.customize.spring.framework.beans.support;
 import com.bingo.customize.spring.framework.beans.BGBeanFactory;
 import com.bingo.customize.spring.framework.beans.config.BGBeanDefinition;
 import com.bingo.customize.spring.framework.stereotype.BGAutowired;
+import com.bingo.customize.spring.framework.stereotype.BGController;
+import com.bingo.customize.spring.framework.stereotype.BGService;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -37,6 +40,10 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
         return beanDefinitionMap;
     }
 
+    public ConcurrentMap<String, BGBeanWrapper> getFactoryBeanInstanceCache(){
+        return this.factoryBeanInstanceCache;
+    }
+
 
     protected BGBeanWrapper instantiateBean(final String beanName, final BGBeanDefinition bd) {
         String className = bd.getBeanClassName();
@@ -59,7 +66,15 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
     }
 
     protected void populateBean(String beanName, BGBeanDefinition mbd, BGBeanWrapper bw) {
+        Class<? extends Annotation>[] annotationClass = new Class[]{BGController.class, BGService.class};
         Object obj = bw.getWrappedInstance();
+        int flag = 0;
+        for(Class<? extends Annotation> annotation:annotationClass){
+            if(!obj.getClass().isAnnotationPresent(annotation)){
+                flag++;
+            }
+        }
+        if(flag == annotationClass.length) return;
         Field[] fields = obj.getClass().getDeclaredFields();
         String fieldTypeSimpleName = "";
         try {
@@ -72,7 +87,7 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
                     Object param = factoryBeanInstanceCache.get(firstCharacterLower(fieldTypeSimpleName));
                     method.setAccessible(true);
                     if (param != null) {
-                        method.invoke(obj, param);
+                        method.invoke(obj, ((BGBeanWrapper) param).getWrappedInstance());
                     }
                 }
             }
@@ -86,6 +101,9 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
     }
 
     protected void addSingletonObjects(String beanName, Object singletonObject) {
+        if(this.singletonObjects.get(beanName)!=null){
+            throw new RuntimeException(String.format("bean [%s] was exists in container ", singletonObject));
+        }
         this.singletonObjects.put(beanName, singletonObject);
     }
 

@@ -18,6 +18,11 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
 
     public BGApplicationContext(String... configLocation){
         this.configLocation = configLocation;
+        try {
+            refresh();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -26,7 +31,17 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
         if(bgBeanDefinition == null) return null;
 
         //1.instantiateBean
-        BGBeanWrapper bgBeanWrapper = instantiateBean(beanName, bgBeanDefinition);
+        if(getFactoryBeanInstanceCache().isEmpty()){
+            getBeanDfinitionMap().forEach((key,bd)->{
+                getFactoryBeanInstanceCache().putIfAbsent(key, instantiateBean(key, bd));
+            });
+        }
+        BGBeanWrapper bgBeanWrapper = null;
+        if (!getFactoryBeanInstanceCache().containsKey(beanName)) {
+            //bgBeanWrapper = instantiateBean(beanName, bgBeanDefinition);
+            getFactoryBeanInstanceCache().putIfAbsent(beanName, instantiateBean(beanName, bgBeanDefinition));
+        }
+        bgBeanWrapper = getFactoryBeanInstanceCache().get(beanName);
 
         if(bgBeanDefinition.isSingleton()){
             addSingletonObjects(beanName,bgBeanWrapper.getWrappedInstance());
@@ -34,7 +49,7 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
 
         //2.populateBean
         populateBean(beanName,bgBeanDefinition,bgBeanWrapper);
-        return null;
+        return getFactoryBeanInstanceCache().get(beanName).getWrappedInstance();
     }
 
     @Override
