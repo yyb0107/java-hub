@@ -36,11 +36,11 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
     private final Map<String, Object> singletonObjects = new ConcurrentHashMap<>(256);
 //    private
 
-    public Map<String, BGBeanDefinition> getBeanDfinitionMap() {
+    protected Map<String, BGBeanDefinition> getBeanDfinitionMap() {
         return beanDefinitionMap;
     }
 
-    public ConcurrentMap<String, BGBeanWrapper> getFactoryBeanInstanceCache(){
+    protected ConcurrentMap<String, BGBeanWrapper> getFactoryBeanInstanceCache(){
         return this.factoryBeanInstanceCache;
     }
 
