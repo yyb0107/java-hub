@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -115,4 +116,12 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
         return simpleName.replace(simpleName.charAt(0), (char) (simpleName.charAt(0) - 32));
     }
 
+    public int getBeanDefinitionCounts() {
+        return this.getBeanDfinitionMap().keySet().size();
+    }
+
+
+    public Set<String> getBeanDefinitionNames() {
+        return this.getBeanDfinitionMap().keySet();
+    }
 }

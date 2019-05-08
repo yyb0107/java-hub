@@ -48,7 +48,9 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
         }
 
         //2.populateBean
-        populateBean(beanName,bgBeanDefinition,bgBeanWrapper);
+        if (!getFactoryBeanInstanceCache().containsKey(beanName)) {
+            populateBean(beanName, bgBeanDefinition, bgBeanWrapper);
+        }
         return getFactoryBeanInstanceCache().get(beanName).getWrappedInstance();
     }
 
