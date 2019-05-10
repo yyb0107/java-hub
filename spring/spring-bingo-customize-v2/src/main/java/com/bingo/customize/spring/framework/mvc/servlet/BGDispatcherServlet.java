@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -25,11 +26,16 @@ import java.util.regex.Pattern;
 @Slf4j
 public class BGDispatcherServlet extends HttpServlet {
     private final String CONTEXT_CONFIG_LOCATION = "contextConfigLocation";
+    private final String TEMPLATE_ROOT = "templateRoot";
     private String contextConfigLocation;
 
     private BGApplicationContext applicationContext;
 
     private List<BGHandlerMapping> handlerMappings = new ArrayList<BGHandlerMapping>();
+
+    private List<BGHandlerAdapter> handlerAdapters = new ArrayList<>();
+
+    private List<BGViewResolver> viewResolvers = new ArrayList<>();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -83,6 +89,15 @@ public class BGDispatcherServlet extends HttpServlet {
     }
 
     private void initViewResolvers(BGApplicationContext context) {
+        //从config中获取模板的目录
+        String templateRoot = ""+context.getConfig().get(TEMPLATE_ROOT);
+        String templateRootPath = this.getClass().getClassLoader().getResource(templateRoot).getPath();
+        File templateRootFile = new File(templateRootPath);
+        File[] files = templateRootFile.listFiles();
+        for(File file:files){
+            viewResolvers.add(new BGViewResolver(file));
+        }
+
     }
 
     private void initRequestToViewNameTranslator(BGApplicationContext context) {
@@ -92,7 +107,14 @@ public class BGDispatcherServlet extends HttpServlet {
     }
 
     private void initHandlerAdapters(BGApplicationContext context) {
-        
+        //每一个handlerMapping对应了每一个Controller每一个方法
+        //Adapter在这里的作用只要是解析request的参数值与Method方法形参的对应
+        //这个处理对于所有的handlerMapping来说都是一样的，所以所有的只需要一个adapter对象就好了
+        BGHandlerAdapter handlerAdapter = new BGHandlerAdapter();
+        handlerAdapters.add(handlerAdapter);
+//        handlerMappings.forEach(handler->{
+//
+//        });
     }
 
     private void initHandlerMappings(BGApplicationContext context) {
@@ -140,7 +162,37 @@ public class BGDispatcherServlet extends HttpServlet {
     }
 
     private void processRequest(HttpServletRequest req, HttpServletResponse resp) {
+        doDispatch(req,resp);
+    }
 
+    private void doDispatch(HttpServletRequest req, HttpServletResponse resp) {
+        BGHandlerMapping handler = getHandler(req);
+
+        BGHandlerAdapter handlerAdapter = getHandlerAdapter(handler);
+
+        try {
+            BGModelAndView modelAndView = handlerAdapter.handle(req,resp,handler);
+
+            processDispatchResult(req,resp,modelAndView);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void processDispatchResult(HttpServletRequest req, HttpServletResponse resp, BGModelAndView modelAndView) {
+        //这里是真正页面输出的地方
+        //根据modelAndView获取viewName
+        //根据viewName在viewResolvers里进行遍历，看是否会有对应的template
+        //如果有，则用templateView进行render
+    }
+
+    private BGHandlerAdapter getHandlerAdapter(BGHandlerMapping handler) {
+        return null;
+    }
+
+    private BGHandlerMapping getHandler(HttpServletRequest req) {
+        return null;
     }
 
 }

@@ -6,6 +6,7 @@ import com.bingo.customize.spring.framework.beans.support.BGBeanWrapper;
 import com.bingo.customize.spring.framework.context.support.BGAbstractApplicationContext;
 
 import java.util.List;
+import java.util.Properties;
 
 /**
  * @author Bingo
@@ -15,6 +16,7 @@ import java.util.List;
 public class BGApplicationContext extends BGAbstractApplicationContext {
     private String[] configLocation;
     private List<BGBeanDefinition> bgBeanDefinitions;
+    private BGBeanDefinitionReader reader;
 
     public BGApplicationContext(String... configLocation){
         this.configLocation = configLocation;
@@ -58,7 +60,7 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
     public void refresh() throws Exception {
         //定位
         if(configLocation == null || configLocation.length == 0) return;
-        BGBeanDefinitionReader reader =new BGBeanDefinitionReader(configLocation[0]);
+        reader =new BGBeanDefinitionReader(configLocation[0]);
 
         //加载
         bgBeanDefinitions = reader.loadBeanDefinitions();
@@ -85,5 +87,8 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
             }
             getBeanDfinitionMap().put(bgBeanDefinition.getFactoryBeanName(),bgBeanDefinition);
         }
+    }
+    public Properties getConfig(){
+        return reader.getConfig();
     }
 }

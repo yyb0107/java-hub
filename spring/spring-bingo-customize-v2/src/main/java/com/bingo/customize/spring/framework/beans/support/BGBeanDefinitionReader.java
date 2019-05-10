@@ -107,4 +107,8 @@ public class BGBeanDefinitionReader {
         return simpleName.replace(simpleName.charAt(0), (char) (simpleName.charAt(0) - 32));
     }
 
+    public Properties getConfig(){
+        return this.properties;
+    }
+
 }
