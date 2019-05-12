@@ -180,9 +180,20 @@ public class BGDispatcherServlet extends HttpServlet {
         }
     }
 
-    private void processDispatchResult(HttpServletRequest req, HttpServletResponse resp, BGModelAndView modelAndView) {
+    private void processDispatchResult(HttpServletRequest req, HttpServletResponse resp, BGModelAndView modelAndView) throws Exception {
         //这里是真正页面输出的地方
         //根据modelAndView获取viewName
+        String viewName = modelAndView.getViewName();
+        BGViewResolver bgViewResolver = null;
+        BGView bgView = null;
+        for(BGViewResolver viewResolver:viewResolvers){
+            bgView = viewResolver.resolveViewName(viewName, null);
+            if(bgView !=null){
+                break;
+            }
+        }
+
+        bgView.render(modelAndView.getModel(),req,resp);
         //根据viewName在viewResolvers里进行遍历，看是否会有对应的template
         //如果有，则用templateView进行render
     }
