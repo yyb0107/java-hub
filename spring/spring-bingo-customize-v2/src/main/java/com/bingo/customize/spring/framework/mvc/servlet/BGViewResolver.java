@@ -48,10 +48,14 @@ public class BGViewResolver {
 
     public BGViewResolver(File templateFile) {
         this.templateFile = templateFile;
+        this.viewName=templateFile.getName();
     }
 
 
     public BGView resolveViewName(String viewName, Locale locale) throws Exception {
+        if(viewName.equals(this.viewName)){
+            return new BGView(templateFile);
+        }
         return null;
     }
 }

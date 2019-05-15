@@ -16,6 +16,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
@@ -199,10 +200,23 @@ public class BGDispatcherServlet extends HttpServlet {
     }
 
     private BGHandlerAdapter getHandlerAdapter(BGHandlerMapping handler) {
+        for(BGHandlerAdapter handlerAdapter:handlerAdapters){
+            if(handlerAdapter.supports(handler)){
+                return handlerAdapter;
+            }
+        }
         return null;
     }
 
     private BGHandlerMapping getHandler(HttpServletRequest req) {
+        String uri = req.getRequestURI().replace(req.getContextPath(), "");
+
+        for (BGHandlerMapping handlerMapping : handlerMappings) {
+            Matcher matcher = handlerMapping.getPattern().matcher(uri);
+            if(matcher.matches()){
+                return handlerMapping;
+            }
+        }
         return null;
     }
 
