@@ -10,7 +10,7 @@ import java.util.Locale;
  */
 public class BGViewResolver {
     private String prefix;
-    private String suffix;
+    private String suffix = ".html";
     private File templateFile;
     private String viewName;
 
@@ -53,7 +53,7 @@ public class BGViewResolver {
 
 
     public BGView resolveViewName(String viewName, Locale locale) throws Exception {
-        if(viewName.equals(this.viewName)){
+        if((viewName+suffix).equals(this.viewName)){
             return new BGView(templateFile);
         }
         return null;

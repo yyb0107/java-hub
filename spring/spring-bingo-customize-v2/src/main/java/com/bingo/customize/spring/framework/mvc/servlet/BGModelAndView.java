@@ -1,5 +1,6 @@
 package com.bingo.customize.spring.framework.mvc.servlet;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -11,6 +12,14 @@ import java.util.Map;
  */
 public class BGModelAndView {
     private String viewName;
+    private Map<String,Object> model;
+
+    public BGModelAndView() {
+    }
+
+    public BGModelAndView(String viewName) {
+        this.viewName = viewName;
+    }
 
     public String getViewName() {
         return viewName;
@@ -21,6 +30,13 @@ public class BGModelAndView {
     }
 
     public Map<String,Object> getModel() {
-        return null;
+        if(model == null){
+            model = new HashMap<>();
+        }
+        return model;
+    }
+
+    public void add(String key,Object obj){
+        getModel().put(key,obj);
     }
 }

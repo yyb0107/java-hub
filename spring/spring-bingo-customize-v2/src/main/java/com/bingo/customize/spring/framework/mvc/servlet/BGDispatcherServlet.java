@@ -98,7 +98,6 @@ public class BGDispatcherServlet extends HttpServlet {
         for(File file:files){
             viewResolvers.add(new BGViewResolver(file));
         }
-
     }
 
     private void initRequestToViewNameTranslator(BGApplicationContext context) {
@@ -168,10 +167,15 @@ public class BGDispatcherServlet extends HttpServlet {
 
     private void doDispatch(HttpServletRequest req, HttpServletResponse resp) {
         BGHandlerMapping handler = getHandler(req);
-
-        BGHandlerAdapter handlerAdapter = getHandlerAdapter(handler);
-
         try {
+            if (handler == null) {
+                processDispatchResult(req, resp, new BGModelAndView("404"));
+                return;
+            }
+
+            BGHandlerAdapter handlerAdapter = getHandlerAdapter(handler);
+
+
             BGModelAndView modelAndView = handlerAdapter.handle(req,resp,handler);
 
             processDispatchResult(req,resp,modelAndView);
