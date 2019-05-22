@@ -5,6 +5,7 @@ import com.bingo.customize.spring.framework.beans.config.BGBeanDefinition;
 import com.bingo.customize.spring.framework.stereotype.BGAutowired;
 import com.bingo.customize.spring.framework.stereotype.BGController;
 import com.bingo.customize.spring.framework.stereotype.BGService;
+import com.bingo.customize.spring.framework.aop.framework.BGAdvisedSupport;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -52,6 +53,14 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
         try {
             Class<?> clazz = Class.forName(className);
             Object obj = clazz.newInstance();
+            BGAdvisedSupport support = instantionAopConfig(bd);
+            support.setTargetClass(clazz);
+            support.setTarget(obj);
+
+            //符合PointCut的规则的话，闯将代理对象
+            if(support.pointCutMatch()) {
+                obj = support.getProxy();
+            }
             bgBeanWrapper = new BGBeanWrapper();
             bgBeanWrapper.setWrappedInstance(obj);
             factoryBeanInstanceCache.putIfAbsent(beanName, bgBeanWrapper);
@@ -63,6 +72,11 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
         } catch (InstantiationException e) {
             e.printStackTrace();
         }
+        return null;
+    }
+
+    //TODO
+    protected BGAdvisedSupport instantionAopConfig(BGBeanDefinition bd){
         return null;
     }
 
