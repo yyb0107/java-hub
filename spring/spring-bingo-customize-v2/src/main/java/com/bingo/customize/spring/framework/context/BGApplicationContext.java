@@ -1,5 +1,7 @@
 package com.bingo.customize.spring.framework.context;
 
+import com.bingo.customize.spring.framework.aop.framework.BGAdvisedConfig;
+import com.bingo.customize.spring.framework.aop.framework.BGAdvisedSupport;
 import com.bingo.customize.spring.framework.beans.config.BGBeanDefinition;
 import com.bingo.customize.spring.framework.beans.support.BGBeanDefinitionReader;
 import com.bingo.customize.spring.framework.beans.support.BGBeanWrapper;
@@ -90,5 +92,26 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
     }
     public Properties getConfig(){
         return reader.getConfig();
+    }
+
+    @Override
+    protected BGAdvisedSupport instantionAopConfig(BGBeanDefinition bd) {
+        if(this.getFactoryBeanInstanceCache().get(BGAdvisedSupport.class.getSimpleName())!=null){
+            return (BGAdvisedSupport)this.getFactoryBeanInstanceCache().get(BGAdvisedSupport.class.getSimpleName()).getWrappedInstance();
+        }
+        BGAdvisedConfig config = new BGAdvisedConfig();
+        config.setPointCut(reader.getConfig().getProperty("pointCut"));
+        config.setAspectAfter(reader.getConfig().getProperty("aspectAfter"));
+        config.setAspectBefore(reader.getConfig().getProperty("aspectBefore"));
+        config.setAspectAfterThrow(reader.getConfig().getProperty("aspectAfterThrow"));
+        config.setAspectAfterThrowingName(reader.getConfig().getProperty("aspectAfterThrowName"));
+        config.setAspectClass(reader.getConfig().getProperty("aspectClass"));
+
+        BGAdvisedSupport support = new BGAdvisedSupport();
+        support.setConfig(config);
+        BGBeanWrapper beanWrapper = new BGBeanWrapper();
+        beanWrapper.setWrappedInstance(config);
+        this.getFactoryBeanInstanceCache().putIfAbsent(BGAdvisedSupport.class.getSimpleName(),beanWrapper);
+        return support;
     }
 }

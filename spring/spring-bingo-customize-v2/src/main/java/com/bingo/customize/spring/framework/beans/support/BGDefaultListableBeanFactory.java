@@ -76,9 +76,7 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
     }
 
     //TODO
-    protected BGAdvisedSupport instantionAopConfig(BGBeanDefinition bd){
-        return null;
-    }
+    protected abstract BGAdvisedSupport instantionAopConfig(BGBeanDefinition bd);
 
     protected void populateBean(String beanName, BGBeanDefinition mbd, BGBeanWrapper bw) {
         Class<? extends Annotation>[] annotationClass = new Class[]{BGController.class, BGService.class};
