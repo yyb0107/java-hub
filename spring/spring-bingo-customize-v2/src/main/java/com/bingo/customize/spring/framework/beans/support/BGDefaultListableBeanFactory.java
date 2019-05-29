@@ -59,7 +59,7 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
 
             //符合PointCut的规则的话，闯将代理对象
             if(support.pointCutMatch()) {
-                obj = support.getProxy();
+                obj = support.getProxy().getProxy();
             }
             bgBeanWrapper = new BGBeanWrapper();
             bgBeanWrapper.setWrappedInstance(obj);

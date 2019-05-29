@@ -96,9 +96,9 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
 
     @Override
     protected BGAdvisedSupport instantionAopConfig(BGBeanDefinition bd) {
-        if(this.getFactoryBeanInstanceCache().get(BGAdvisedSupport.class.getSimpleName())!=null){
-            return (BGAdvisedSupport)this.getFactoryBeanInstanceCache().get(BGAdvisedSupport.class.getSimpleName()).getWrappedInstance();
-        }
+//        if(this.getFactoryBeanInstanceCache().get(bd.getFactoryBeanName())!=null){
+//            return (BGAdvisedSupport)this.getFactoryBeanInstanceCache().get(bd.getFactoryBeanName()).getWrappedInstance();
+//        }
         BGAdvisedConfig config = new BGAdvisedConfig();
         config.setPointCut(reader.getConfig().getProperty("pointCut"));
         config.setAspectAfter(reader.getConfig().getProperty("aspectAfter"));
@@ -110,8 +110,8 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
         BGAdvisedSupport support = new BGAdvisedSupport();
         support.setConfig(config);
         BGBeanWrapper beanWrapper = new BGBeanWrapper();
-        beanWrapper.setWrappedInstance(config);
-        this.getFactoryBeanInstanceCache().putIfAbsent(BGAdvisedSupport.class.getSimpleName(),beanWrapper);
+        beanWrapper.setWrappedInstance(support);
+//        this.getFactoryBeanInstanceCache().putIfAbsent(bd.getFactoryBeanName(),beanWrapper);
         return support;
     }
 }

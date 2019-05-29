@@ -45,7 +45,7 @@ public class BGAdvisedSupport {
 
         }
         String regex = config.getPointCut();
-        String className = targetClass.getClass().getName();
+        String className = targetClass.getName();
         Method[] methods = targetClass.getMethods();
         Pattern pointCutPattern = Pattern.compile(regex);
         boolean isMatches = false;
@@ -79,7 +79,7 @@ public class BGAdvisedSupport {
         String cacheKey = method.getName();
         List<Object> cached = this.methodCache.get(cacheKey);
         if (cached == null) {
-//            cached =
+            cached =  new LinkedList<Object>();
             boolean needInterceptor = false;
             for (Method m : needAopMethods) {
                 if (m.getName().equals(cacheKey)) {
@@ -91,15 +91,16 @@ public class BGAdvisedSupport {
                 //执行器链
                 List<Object> advices = new LinkedList<Object>();
                 //开始为每一个方法加入拦截的方法，根据方法的签名
-                if (!(this.config.getAspectBefore().equals("") || this.config.getAspectBefore() != null)) {
+                if (!(this.config.getAspectBefore().equals("") || this.config.getAspectBefore() == null)) {
                     advices.add(new BGMethodBeforeAdviceInterceptor(this.aspectMethods.get(this.config.getAspectBefore()),aspectClasses.get(this.config.getAspectClass()).newInstance()));
                 }
-                if (!(this.config.getAspectAfter().equals("") || this.config.getAspectAfter() != null)) {
+                if (!(this.config.getAspectAfter().equals("") || this.config.getAspectAfter() == null)) {
                     advices.add(new BGMethodBeforeAdviceInterceptor(this.aspectMethods.get(this.config.getAspectAfter()),aspectClasses.get(this.config.getAspectClass()).newInstance()));
                 }
-                if (!(this.config.getAspectAfterThrow().equals("") || this.config.getAspectAfterThrow() != null)) {
+                if (!(this.config.getAspectAfterThrow().equals("") || this.config.getAspectAfterThrow() == null)) {
                     advices.add(new BGAfterThrowingAdviceInterceptor(this.aspectMethods.get(this.config.getAspectAfterThrow()),aspectClasses.get(this.config.getAspectClass()).newInstance()));
                 }
+                cached.addAll(advices);
             }
             this.methodCache.put(cacheKey, cached);
         }

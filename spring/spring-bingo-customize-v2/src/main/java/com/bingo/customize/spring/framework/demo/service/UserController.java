@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @BGController("user")
 @BGRequestMapping("/user")
-public class UserController {
+public class UserController{
     @BGAutowired
     private UserService service;
 

@@ -1,8 +1,11 @@
 package com.bingo.customize.spring.framework.aop.framework;
 
+import com.bingo.customize.spring.framework.aop.framework.aspectj.BGReflectiveMethodInvocation;
+
 import java.io.Serializable;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.util.List;
 
 /**
@@ -25,16 +28,18 @@ final class BGJdkDynamicAopProxy implements BGAopProxy, InvocationHandler, Seria
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        return null;
+        List<Object> interceptorsAndDynamicMethodMatchers = this.advised.getInterceptorsAndDynamicInterceptionAdvice(method,this.advised.getTargetClass());
+        BGReflectiveMethodInvocation invocation = new BGReflectiveMethodInvocation(proxy,this.advised.getTarget(),method,args,this.advised.getTargetClass(),interceptorsAndDynamicMethodMatchers);
+        return invocation.proceed();
     }
 
     @Override
     public Object getProxy() {
-        return null;
+        return getProxy(advised.getTargetClass().getClassLoader());
     }
 
     @Override
     public Object getProxy(ClassLoader classLoader) {
-        return null;
+        return Proxy.newProxyInstance(classLoader, advised.getTargetClass().getInterfaces(), this);
     }
 }

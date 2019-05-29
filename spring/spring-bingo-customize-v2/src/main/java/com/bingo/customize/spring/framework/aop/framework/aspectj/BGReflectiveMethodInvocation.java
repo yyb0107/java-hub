@@ -30,7 +30,7 @@ public class BGReflectiveMethodInvocation implements BGJoinpoint {
      */
     private int currentInterceptorIndex = -1;
 
-    protected BGReflectiveMethodInvocation(
+    public BGReflectiveMethodInvocation(
             Object proxy, Object target, Method method, Object[] arguments,
             Class<?> targetClass, List<Object> interceptorsAndDynamicMethodMatchers) {
 
