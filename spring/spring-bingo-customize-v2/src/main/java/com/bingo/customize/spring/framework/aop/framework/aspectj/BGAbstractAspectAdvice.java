@@ -23,7 +23,7 @@ public abstract class BGAbstractAspectAdvice {
     protected Object invokeAdviceMethod(
             BGJoinpoint joinPoint, Object returnValue, Throwable ex)
             throws Throwable {
-
+        //假设织入方法都没有参数
         return aspectMethod.invoke(aspectObject);
     }
 

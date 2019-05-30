@@ -61,6 +61,7 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
             if(support.pointCutMatch()) {
                 obj = support.getProxy().getProxy();
             }
+
             bgBeanWrapper = new BGBeanWrapper();
             bgBeanWrapper.setWrappedInstance(obj);
             factoryBeanInstanceCache.putIfAbsent(beanName, bgBeanWrapper);

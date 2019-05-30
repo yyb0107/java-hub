@@ -1,6 +1,7 @@
 package com.bingo.customize.spring.framework.aop.framework;
 
 import com.bingo.customize.spring.framework.aop.framework.aspectj.BGAfterThrowingAdviceInterceptor;
+import com.bingo.customize.spring.framework.aop.framework.aspectj.BGAroundAdviceInterceptor;
 import com.bingo.customize.spring.framework.aop.framework.aspectj.BGMethodBeforeAdviceInterceptor;
 import lombok.Getter;
 import lombok.Setter;
@@ -93,6 +94,9 @@ public class BGAdvisedSupport {
                 //开始为每一个方法加入拦截的方法，根据方法的签名
                 if (!(this.config.getAspectBefore().equals("") || this.config.getAspectBefore() == null)) {
                     advices.add(new BGMethodBeforeAdviceInterceptor(this.aspectMethods.get(this.config.getAspectBefore()),aspectClasses.get(this.config.getAspectClass()).newInstance()));
+                }
+                if (!(this.config.getAspectAround().equals("") || this.config.getAspectAround() == null)) {
+                    advices.add(new BGAroundAdviceInterceptor(this.aspectMethods.get(this.config.getAspectAround()),aspectClasses.get(this.config.getAspectClass()).newInstance()));
                 }
                 if (!(this.config.getAspectAfter().equals("") || this.config.getAspectAfter() == null)) {
                     advices.add(new BGMethodBeforeAdviceInterceptor(this.aspectMethods.get(this.config.getAspectAfter()),aspectClasses.get(this.config.getAspectClass()).newInstance()));

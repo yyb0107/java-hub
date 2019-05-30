@@ -106,6 +106,7 @@ public class BGApplicationContext extends BGAbstractApplicationContext {
         config.setAspectAfterThrow(reader.getConfig().getProperty("aspectAfterThrow"));
         config.setAspectAfterThrowingName(reader.getConfig().getProperty("aspectAfterThrowName"));
         config.setAspectClass(reader.getConfig().getProperty("aspectClass"));
+        config.setAspectAround(reader.getConfig().getProperty("aspectAround"));
 
         BGAdvisedSupport support = new BGAdvisedSupport();
         support.setConfig(config);

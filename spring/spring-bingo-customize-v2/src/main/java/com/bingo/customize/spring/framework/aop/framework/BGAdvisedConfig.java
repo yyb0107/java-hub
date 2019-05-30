@@ -15,6 +15,7 @@ public class BGAdvisedConfig {
     private String aspectClass;
     private String aspectBefore;
     private String aspectAfter;
+    private String aspectAround;
     private String aspectAfterThrow;
     private String aspectAfterThrowingName;
 }

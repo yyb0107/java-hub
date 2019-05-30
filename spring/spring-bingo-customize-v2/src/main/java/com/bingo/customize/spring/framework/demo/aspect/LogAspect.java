@@ -23,4 +23,9 @@ public class LogAspect {
         log.info("afterThrowing");
     }
 
+    public void around(){
+        log.info("around"+System.currentTimeMillis());
+    }
+
+
 }
