@@ -11,6 +11,7 @@
   <modules>
     <module>pattern</module>
     <module>spring</module>
+      <module>mybatis</module>
   </modules>
 
   <name>java-hub</name>
