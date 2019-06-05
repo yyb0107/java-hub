@@ -26,6 +26,5 @@ public class UserDaoDemo {
         int rs = userMapper.insert(user);
         sqlSession.commit();
         log.info("rs {}", rs);
-
     }
 }
