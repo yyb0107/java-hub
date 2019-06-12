@@ -8,12 +8,14 @@
     </settings>-->
     <properties resource="db.properties"></properties>
     
-    <settings>
+    <!--<settings>
         <setting name="logImpl" value="STDOUT_LOGGING"/>
-    </settings>
+    </settings>-->
 
     <plugins>
-        <plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>
+        <!--<plugin interceptor="com.github.pagehelper.PageInterceptor"></plugin>-->
+        <plugin interceptor="plugin.SqlPrinterInterceptor"></plugin>
+        <plugin interceptor="plugin.RowBoundsInterceptor"></plugin>
     </plugins>
 
     <environments default="development">

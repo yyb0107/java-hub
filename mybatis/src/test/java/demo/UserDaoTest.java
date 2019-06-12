@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import generate.dao.UserMapper;
 import generate.model.User;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.ibatis.session.RowBounds;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
@@ -67,4 +68,15 @@ public class UserDaoTest {
         }
         sqlSession.commit();
     }
+
+    @Test
+    public void testSelectRowBounds(){
+        RowBounds rowBounds = new RowBounds(5,3);
+        List<User> users = userMapper.selectAll(rowBounds);
+        log.info("users size {}", users.size());
+        for (User user : users) {
+            log.info("userid {}, username {}",user.getUserid(),user.getUsername());
+        }
+    }
+
 }
