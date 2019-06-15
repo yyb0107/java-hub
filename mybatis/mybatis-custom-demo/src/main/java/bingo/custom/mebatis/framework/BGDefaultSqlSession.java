@@ -1,6 +1,7 @@
 package bingo.custom.mebatis.framework;
 
-import java.lang.reflect.Proxy;
+import bingo.custom.mebatis.framework.executor.BGExecutor;
+
 import java.sql.SQLException;
 import java.util.List;
 

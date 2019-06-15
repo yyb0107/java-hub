@@ -1,8 +1,8 @@
-package bingo.custom.mebatis.framework;
+package bingo.custom.mebatis.framework.executor;
 
-import bingo.custom.mebatis.demo.User;
+import bingo.custom.mebatis.framework.handler.BGStatementHandler;
+import bingo.custom.mebatis.framework.Configuration;
 
-import java.lang.reflect.Field;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;

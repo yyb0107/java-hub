@@ -1,4 +1,6 @@
-package bingo.custom.mebatis.framework;
+package bingo.custom.mebatis.framework.handler;
+
+import bingo.custom.mebatis.framework.Configuration;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

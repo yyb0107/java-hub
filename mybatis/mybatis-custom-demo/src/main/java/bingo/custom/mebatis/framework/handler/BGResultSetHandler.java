@@ -1,4 +1,4 @@
-package bingo.custom.mebatis.framework;
+package bingo.custom.mebatis.framework.handler;
 
 import bingo.custom.mebatis.demo.User;
 

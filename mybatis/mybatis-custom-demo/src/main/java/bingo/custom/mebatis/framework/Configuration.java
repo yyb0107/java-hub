@@ -1,5 +1,8 @@
 package bingo.custom.mebatis.framework;
 
+import bingo.custom.mebatis.framework.executor.BGExecutor;
+import bingo.custom.mebatis.framework.executor.BGSimpleExecutor;
+import bingo.custom.mebatis.framework.handler.BGStatementHandler;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Proxy;
@@ -16,7 +19,7 @@ import java.util.ResourceBundle;
  */
 @Slf4j
 public class Configuration {
-    ResourceBundle datasource = ResourceBundle.getBundle("datasource");
+    public final ResourceBundle datasource = ResourceBundle.getBundle("datasource");
     ResourceBundle config = ResourceBundle.getBundle("config");
 
     final Map<String,String> statementMappings = new HashMap<>();

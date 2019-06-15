@@ -1,4 +1,6 @@
-package bingo.custom.mebatis.framework;
+package bingo.custom.mebatis.framework.executor;
+
+import bingo.custom.mebatis.framework.Configuration;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

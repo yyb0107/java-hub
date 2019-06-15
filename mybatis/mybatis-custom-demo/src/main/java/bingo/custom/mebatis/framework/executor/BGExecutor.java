@@ -1,4 +1,4 @@
-package bingo.custom.mebatis.framework;
+package bingo.custom.mebatis.framework.executor;
 
 import java.sql.SQLException;
 import java.util.List;
