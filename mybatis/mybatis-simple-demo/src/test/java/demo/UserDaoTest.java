@@ -77,6 +77,7 @@ public class UserDaoTest {
         for (User user : users) {
             log.info("userid {}, username {}",user.getUserid(),user.getUsername());
         }
+
     }
 
 }
