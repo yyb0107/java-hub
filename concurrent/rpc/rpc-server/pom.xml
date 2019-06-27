@@ -3,18 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>java-hub</artifactId>
+        <artifactId>rpc</artifactId>
         <groupId>com.bingo.java</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>concurrent</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>thread-simple-demo</module>
-        <module>rpc</module>
-    </modules>
+    <artifactId>rpc-server</artifactId>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.bingo.java</groupId>
+            <artifactId>rpc-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
 
 
 </project>
