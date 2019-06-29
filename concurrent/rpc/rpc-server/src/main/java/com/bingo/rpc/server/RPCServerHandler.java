@@ -1,5 +1,9 @@
 package com.bingo.rpc.server;
 
+import com.bingo.rpc.api.IUserService;
+import com.bingo.rpc.api.RPCRequest;
+import com.bingo.rpc.server.provider.UserService;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -34,6 +38,9 @@ public class RPCServerHandler implements Runnable {
             RPCRequest request = (RPCRequest)ois.readObject();
 
             Class<?> clazz = Class.forName(request.getClassName());
+            if(clazz == IUserService.class){
+                clazz = UserService.class;
+            }
             Method method = clazz.getMethod(request.getMethodName(),request.getParameterTypes());
             Object obj = clazz.newInstance();
             Object result = method.invoke(obj, request.getArgs());
@@ -54,6 +61,13 @@ public class RPCServerHandler implements Runnable {
             e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
+        } finally{
+            try {
+                oos.writeObject("");
+                oos.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

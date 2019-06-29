@@ -15,19 +15,40 @@ import java.util.concurrent.Executors;
  */
 public class RPCServer {
     ServerSocket serverSocket = null;
+    private int port ;
+
+    public RPCServer(int port) {
+        this.port = port;
+    }
 
     ExecutorService executorService = Executors.newCachedThreadPool();
 
-    public void publisher(int port) {
+    public void publisher() {
         try {
             serverSocket = new ServerSocket(port);
+            System.out.println("服务发布成功……");
             while (true) {
                 Socket socket = serverSocket.accept();
+                System.out.println("收到一个请求");
                 executorService.execute(new RPCServerHandler(socket));
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            if(serverSocket!=null){
+                try {
+                    serverSocket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+    }
+
+    public static void main(String[] args) {
+
+        RPCServer server = new RPCServer(8080);
+        server.publisher();
     }
 
 

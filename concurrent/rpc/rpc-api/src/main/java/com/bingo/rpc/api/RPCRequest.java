@@ -1,4 +1,4 @@
-package com.bingo.rpc.server;
+package com.bingo.rpc.api;
 
 import java.io.Serializable;
 
@@ -15,6 +15,13 @@ public class RPCRequest implements Serializable {
     private String methodName;
     private Object[] args;
     private Class<?>[] parameterTypes;
+
+    public RPCRequest(String className, String methodName, Object[] args, Class<?>[] parameterTypes) {
+        this.className = className;
+        this.methodName = methodName;
+        this.args = args;
+        this.parameterTypes = parameterTypes;
+    }
 
     public Class<?>[] getParameterTypes() {
         return parameterTypes;

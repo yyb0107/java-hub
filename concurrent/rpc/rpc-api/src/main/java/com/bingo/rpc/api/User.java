@@ -29,4 +29,14 @@ public class User implements Serializable {
     public void setAge(int age) {
         this.age = age;
     }
+
+    public static void main(String[] args) {
+        System.out.println(resizeStamp(16));
+    }
+
+    static final int resizeStamp(int n) {
+//        System.out.println(Integer.numberOfLeadingZeros(n) );
+        System.out.println(1<<15);
+        return Integer.numberOfLeadingZeros(n) | (1 << (15));
+    }
 }
