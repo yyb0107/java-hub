@@ -1,8 +1,17 @@
 package com.bingo.rpc.server;
 
+import com.bingo.rpc.server.annotation.RPCService;
+import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -13,9 +22,11 @@ import java.util.concurrent.Executors;
  * @description: TODO
  * @date 2019/6/27  23:01
  */
-public class RPCServer {
+//@Component
+public class RPCServer implements ApplicationContextAware, InitializingBean {
     ServerSocket serverSocket = null;
     private int port ;
+    final Map<String,Object> nameMapService = new HashMap<String,Object>();
 
     public RPCServer(int port) {
         this.port = port;
@@ -30,7 +41,7 @@ public class RPCServer {
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("收到一个请求");
-                executorService.execute(new RPCServerHandler(socket));
+                executorService.execute(new RPCServerHandler(socket,nameMapService));
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,11 +56,26 @@ public class RPCServer {
         }
     }
 
-    public static void main(String[] args) {
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        Map<String,Object> maps = applicationContext.getBeansWithAnnotation(RPCService.class);
+        maps.forEach((key,bean)->{
+            nameMapService.put(bean.getClass().getAnnotation(RPCService.class).value(),bean);
+        });
 
-        RPCServer server = new RPCServer(8080);
-        server.publisher();
+
     }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        publisher();
+    }
+
+//    public static void main(String[] args) {
+//
+//        RPCServer server = new RPCServer(8080);
+//        server.publisher();
+//    }
 
 
 }

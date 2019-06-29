@@ -10,6 +10,7 @@ import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.Socket;
+import java.util.Map;
 
 /**
  * @author Bingo
@@ -20,12 +21,13 @@ import java.net.Socket;
  */
 public class RPCServerHandler implements Runnable {
     private Socket socket;
+    private Map<String, Object> nameMapService;
     ObjectInputStream ois;
     ObjectOutputStream oos;
 
-    public RPCServerHandler(Socket socket) {
+    public RPCServerHandler(Socket socket, Map<String, Object> nameMapService) {
         this.socket = socket;
-
+        this.nameMapService = nameMapService;
     }
 
 
@@ -38,11 +40,11 @@ public class RPCServerHandler implements Runnable {
             RPCRequest request = (RPCRequest)ois.readObject();
 
             Class<?> clazz = Class.forName(request.getClassName());
-            if(clazz == IUserService.class){
-                clazz = UserService.class;
+            Object obj = nameMapService.get(clazz.getSimpleName());
+            if(obj == null){
+                return ;
             }
             Method method = clazz.getMethod(request.getMethodName(),request.getParameterTypes());
-            Object obj = clazz.newInstance();
             Object result = method.invoke(obj, request.getArgs());
 
 
@@ -57,13 +59,12 @@ public class RPCServerHandler implements Runnable {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
-        } catch (InstantiationException e) {
-            e.printStackTrace();
         } catch (InvocationTargetException e) {
             e.printStackTrace();
         } finally{
             try {
                 oos.writeObject("");
+                oos.flush();
                 oos.close();
             } catch (IOException e) {
                 e.printStackTrace();

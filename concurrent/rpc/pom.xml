@@ -9,6 +9,11 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <properties>
+        <spring-framework-version>5.1.4.RELEASE</spring-framework-version>
+        <rpc-api-version>1.0-SNAPSHOT</rpc-api-version>
+    </properties>
+
     <artifactId>rpc</artifactId>
     <packaging>pom</packaging>
     <modules>
@@ -16,6 +21,22 @@
         <module>rpc-client</module>
         <module>rpc-api</module>
     </modules>
+
+    <dependencyManagement>
+
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-context</artifactId>
+                <version>${spring-framework-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.bingo.java</groupId>
+                <artifactId>rpc-api</artifactId>
+                <version>${rpc-api-version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 
 </project>
