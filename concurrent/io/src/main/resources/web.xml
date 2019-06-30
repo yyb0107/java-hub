@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app >
+    <display-name>mini tomcat Web Application</display-name>
+    <servlet>
+        <servlet-name>first</servlet-name>
+        <servlet-class>com.bingo.io.tomcat.bio.FirstServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>first</servlet-name>
+        <url-pattern>/first.do</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>netty-first</servlet-name>
+        <servlet-class>com.bingo.io.tomcat.netty.FirstServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>netty-first</servlet-name>
+        <url-pattern>/first2.do</url-pattern>
+    </servlet-mapping>
+</web-app>
+

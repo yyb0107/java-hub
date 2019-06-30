@@ -20,6 +20,7 @@ public class NioClient {
 
     static Selector selector;
     static ByteBuffer buffer = ByteBuffer.allocate(1024);
+    static boolean exit = false;
 
     public static void main(String[] args) throws IOException {
         SocketChannel socketChannel = SocketChannel.open();
@@ -29,7 +30,7 @@ public class NioClient {
         selector = Selector.open();
         socketChannel.register(selector, SelectionKey.OP_CONNECT);
 
-        while(true){
+        while(!exit){
             selector.select();
             Set<SelectionKey> keys = selector.selectedKeys();
             Iterator<SelectionKey> iterator = keys.iterator();
@@ -47,6 +48,7 @@ public class NioClient {
         if (key.isConnectable()){
             System.out.println("开始连接");
             SocketChannel sc = (SocketChannel)key.channel();
+//            sc.connect(new InetSocketAddress("127.0.0.1", 8080));
             if (sc.isConnectionPending()) {
                 sc.finishConnect();
                 System.out.println("connect success !");
@@ -62,6 +64,7 @@ public class NioClient {
                 buffer.flip();
             }
             System.out.println("client receive data :" +sb.toString());
+            exit= true;
             sc.close();
         }else if(key.isWritable()){
             System.out.println("开始写");
