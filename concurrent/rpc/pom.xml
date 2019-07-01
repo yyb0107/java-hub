@@ -12,6 +12,7 @@
     <properties>
         <spring-framework-version>5.1.4.RELEASE</spring-framework-version>
         <rpc-api-version>1.0-SNAPSHOT</rpc-api-version>
+        <netty-version>4.1.6.Final</netty-version>
     </properties>
 
     <artifactId>rpc</artifactId>
@@ -20,6 +21,7 @@
         <module>rpc-server</module>
         <module>rpc-client</module>
         <module>rpc-api</module>
+        <module>rpc-registry</module>
     </modules>
 
     <dependencyManagement>
@@ -34,6 +36,11 @@
                 <groupId>com.bingo.java</groupId>
                 <artifactId>rpc-api</artifactId>
                 <version>${rpc-api-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
