@@ -20,6 +20,10 @@
             <groupId>io.netty</groupId>
             <artifactId>netty-all</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.bingo.java</groupId>
+            <artifactId>rpc-api</artifactId>
+        </dependency>
     </dependencies>
 
 

@@ -1,12 +1,13 @@
 package com.bingo.rpc.registry;
 
+import com.bingo.rpc.api.RPCRequest;
+import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.ChannelPipeline;
-import io.netty.channel.EventLoopGroup;
+import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.serialization.ClassResolvers;
@@ -17,6 +18,9 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Bingo
  * @title: RpcRegistry
@@ -25,6 +29,33 @@ import org.springframework.context.ApplicationContextAware;
  * @date 2019/7/1  22:41
  */
 public class RpcRegistry implements ApplicationContextAware, InitializingBean {
+    private final Map<String, RPCRequest> container = new HashMap<>();
+    int port ;
+
+    public RpcRegistry(int port){
+        this.port = port;
+    }
+
+    public Bootstrap bootstrap(ChannelHandler handler){
+        Bootstrap bootstrap = new Bootstrap();
+        EventLoopGroup group = new NioEventLoopGroup();
+        bootstrap.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+            @Override
+            protected void initChannel(SocketChannel socketChannel) throws Exception {
+                ChannelPipeline pipeline = socketChannel.pipeline();
+                pipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
+                //自定义协议编码器
+                pipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
+                //对象参数类型编码器
+                pipeline.addLast("encoder", new ObjectEncoder());
+                //对象参数类型解码器
+                pipeline.addLast("decoder", new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
+                pipeline.addLast(handler);
+            }
+        });
+        return bootstrap;
+
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -44,8 +75,8 @@ public class RpcRegistry implements ApplicationContextAware, InitializingBean {
                  lengthAdjustment：要添加到长度字段值的补偿值
                  initialBytesToStrip：从解码帧中去除的第一个字节数
                  */
-                LengthFieldBasedFrameDecoder test = new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4);
-                test.handlerAdded(null);
+//                LengthFieldBasedFrameDecoder test = new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4);
+//                test.handlerAdded(null);
                 pipeline.addLast("frameDecoder", new LengthFieldBasedFrameDecoder(Integer.MAX_VALUE, 0, 4, 0, 4));
                 //自定义协议编码器
                 pipeline.addLast("frameEncoder", new LengthFieldPrepender(4));
@@ -53,10 +84,13 @@ public class RpcRegistry implements ApplicationContextAware, InitializingBean {
                 pipeline.addLast("encoder", new ObjectEncoder());
                 //对象参数类型解码器
                 pipeline.addLast("decoder", new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
-
+                pipeline.addLast(new RpcRegistryHandler(container,RpcRegistry.this));
             }
         });
 
+        ChannelFuture future =  server.bind(port).sync();
+        System.out.println("RpcRegistry 启动完成 "+port);
+        future.channel().closeFuture().sync();
     }
 
     @Override

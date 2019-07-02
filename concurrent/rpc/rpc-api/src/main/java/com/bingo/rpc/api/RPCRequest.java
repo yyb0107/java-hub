@@ -11,24 +11,29 @@ import java.io.Serializable;
  */
 public class RPCRequest implements Serializable {
 
+    private TYPE type;
     private String className;
     private String methodName;
     private Object[] args;
     private Class<?>[] parameterTypes;
 
     public RPCRequest(String className, String methodName, Object[] args, Class<?>[] parameterTypes) {
+        this(TYPE.REQUEST,className,methodName,args,parameterTypes);
+    }
+    public RPCRequest(TYPE type,String className, String methodName, Object[] args, Class<?>[] parameterTypes) {
+        this.type = type;
         this.className = className;
         this.methodName = methodName;
         this.args = args;
         this.parameterTypes = parameterTypes;
     }
 
-    public Class<?>[] getParameterTypes() {
-        return parameterTypes;
+    public TYPE getType() {
+        return type;
     }
 
-    public void setParameterTypes(Class<?>[] parameterTypes) {
-        this.parameterTypes = parameterTypes;
+    public void setType(TYPE type) {
+        this.type = type;
     }
 
     public String getClassName() {
@@ -53,5 +58,18 @@ public class RPCRequest implements Serializable {
 
     public void setArgs(Object[] args) {
         this.args = args;
+    }
+
+    public Class<?>[] getParameterTypes() {
+        return parameterTypes;
+    }
+
+    public void setParameterTypes(Class<?>[] parameterTypes) {
+        this.parameterTypes = parameterTypes;
+    }
+
+    public static enum TYPE{
+        REQUEST,
+        REGISTRY
     }
 }
