@@ -19,6 +19,7 @@ import java.util.Map;
  * @description: TODO
  * @date 2019/6/27  23:06
  */
+@Deprecated
 public class RPCServerHandler implements Runnable {
     private Socket socket;
     private Map<String, Object> nameMapService;

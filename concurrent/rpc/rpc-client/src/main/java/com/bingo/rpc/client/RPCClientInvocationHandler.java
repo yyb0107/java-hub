@@ -11,39 +11,40 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import lombok.extern.slf4j.Slf4j;
 
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.net.Socket;
 
 /**
  * @author Bingo
- * @title: com.bingo.rpc.client.RPCClientHandler
+ * @title: com.bingo.rpc.client.RPCClientInvocationHandler
  * @projectName java-hub
  * @description: TODO
  * @date 2019/6/29  10:02
  */
-public class RPCClientHandler implements InvocationHandler {
+@Slf4j
+public class RPCClientInvocationHandler implements InvocationHandler {
     private String host;
     private int port;
     private Object response;
     Bootstrap bootstrap;
-    public RPCClientHandler(String host, int port) {
+    public RPCClientInvocationHandler(String host, int port) {
         this.host = host;
         this.port = port;
     }
 
-    private RPCClientHandler(){}
+    private RPCClientInvocationHandler(){}
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
         Object obj = null;
-        Handler handler = new Handler();
+        log.debug("进入invoke方法");
+        RPCClientResponseHandler handler = new RPCClientResponseHandler();
+        EventLoopGroup group = new NioEventLoopGroup();
         if(bootstrap== null){
             bootstrap = new Bootstrap();
-            bootstrap.group(new NioEventLoopGroup()).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>(){
+            bootstrap.group(group).channel(NioSocketChannel.class).option(ChannelOption.TCP_NODELAY, true).handler(new ChannelInitializer<SocketChannel>(){
                 @Override
                 protected void initChannel(SocketChannel socketChannel) throws Exception {
                     ChannelPipeline pipeline = socketChannel.pipeline();
@@ -54,14 +55,18 @@ public class RPCClientHandler implements InvocationHandler {
                     pipeline.addLast("encoder", new ObjectEncoder());
                     //对象参数类型解码器
                     pipeline.addLast("decoder", new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
-                    pipeline.addLast();
+                    pipeline.addLast(handler);
                 }
             });
         }
         ChannelFuture future = bootstrap.connect("127.0.0.1", 8080).sync();
-        future.channel().writeAndFlush(new RPCRequest(method.getDeclaringClass().getName(),method.getName(), args, method.getParameterTypes())).sync();
+        future.channel().writeAndFlush(new RPCRequest(method.getDeclaringClass().getSimpleName(),method.getName(), args, method.getParameterTypes())).sync();
         future.channel().closeFuture().sync();
+
         obj = handler.getResponse();
+
+        log.debug("result = "+obj);
+        group.shutdownGracefully();
         return obj;
     }
 

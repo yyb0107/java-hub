@@ -31,6 +31,7 @@ import java.util.Map;
 public class RpcRegistry implements ApplicationContextAware, InitializingBean {
     private final Map<String, RPCRequest> container = new HashMap<>();
     int port ;
+    EventLoopGroup bootstrapGroup;
 
     public RpcRegistry(int port){
         this.port = port;
@@ -38,8 +39,8 @@ public class RpcRegistry implements ApplicationContextAware, InitializingBean {
 
     public Bootstrap bootstrap(ChannelHandler handler){
         Bootstrap bootstrap = new Bootstrap();
-        EventLoopGroup group = new NioEventLoopGroup();
-        bootstrap.group(group).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
+        bootstrapGroup = new NioEventLoopGroup();
+        bootstrap.group(bootstrapGroup).channel(NioSocketChannel.class).handler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
                 ChannelPipeline pipeline = socketChannel.pipeline();
@@ -96,5 +97,9 @@ public class RpcRegistry implements ApplicationContextAware, InitializingBean {
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 
+    }
+
+    public void shutdownGracefully() {
+        bootstrapGroup.shutdownGracefully();
     }
 }

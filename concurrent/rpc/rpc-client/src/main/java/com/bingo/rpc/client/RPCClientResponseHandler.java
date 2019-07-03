@@ -5,12 +5,12 @@ import io.netty.channel.ChannelInboundHandlerAdapter;
 
 /**
  * @author Bingo
- * @title: Handler
+ * @title: RPCClientResponseHandler
  * @projectName java-hub
  * @description: TODO
  * @date 2019/7/2  23:52
  */
-public class Handler  extends ChannelInboundHandlerAdapter {
+public class RPCClientResponseHandler extends ChannelInboundHandlerAdapter {
     private Object response;
     public Object getResponse() {
         return response;
@@ -19,6 +19,8 @@ public class Handler  extends ChannelInboundHandlerAdapter {
     @Override
     public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
         this.response = msg;
+        ctx.flush();
+        ctx.close();
     }
 
     @Override

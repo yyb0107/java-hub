@@ -1,6 +1,7 @@
 package com.bingo.rpc.api;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * @author Bingo
@@ -71,5 +72,16 @@ public class RPCRequest implements Serializable {
     public static enum TYPE{
         REQUEST,
         REGISTRY
+    }
+
+    @Override
+    public String toString() {
+        return "RPCRequest{" +
+                "type=" + type +
+                ", className='" + className + '\'' +
+                ", methodName='" + methodName + '\'' +
+                ", args=" + Arrays.toString(args) +
+                ", parameterTypes=" + Arrays.toString(parameterTypes) +
+                '}';
     }
 }

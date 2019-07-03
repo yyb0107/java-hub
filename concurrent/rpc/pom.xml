@@ -13,6 +13,9 @@
         <spring-framework-version>5.1.4.RELEASE</spring-framework-version>
         <rpc-api-version>1.0-SNAPSHOT</rpc-api-version>
         <netty-version>4.1.6.Final</netty-version>
+        <lombok-version>1.16.10</lombok-version>
+        <slf4j-version>1.7.25</slf4j-version>
+        <logback-version>1.2.3</logback-version>
     </properties>
 
     <artifactId>rpc</artifactId>
@@ -41,6 +44,23 @@
                 <groupId>io.netty</groupId>
                 <artifactId>netty-all</artifactId>
                 <version>${netty-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok</artifactId>
+                <version>${lombok-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j-version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${logback-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

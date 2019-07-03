@@ -17,10 +17,12 @@ import io.netty.handler.codec.LengthFieldPrepender;
 import io.netty.handler.codec.serialization.ClassResolvers;
 import io.netty.handler.codec.serialization.ObjectDecoder;
 import io.netty.handler.codec.serialization.ObjectEncoder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
+import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,7 +34,8 @@ import java.util.Map;
  * @description: TODO
  * @date 2019/6/27  23:01
  */
-//@Component
+@Component//ps.这里的@Component可以不用声明，因为在Configuration类中，使用@Bean的方式会创建一个bean，默认情况下，在这里声明@Component会产生定义两次的问题，但是在@Bean中指定了name=RPCServer,这样@Component的这个会被忽略
+@Slf4j
 public class RPCServer implements ApplicationContextAware, InitializingBean {
     private int port ;
     private int registryPort = 8080;
@@ -58,11 +61,11 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
                 pipeline.addLast("encoder", new ObjectEncoder());
                 //对象参数类型解码器
                 pipeline.addLast("decoder", new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
-                pipeline.addLast("handler", new RequestHandler(nameMapService));
+                pipeline.addLast("handler", new ServiceRequestHandler(nameMapService));
             }
         });
         ChannelFuture future = server.bind(port).sync();
-        System.out.println("Provider 启动完成 "+port);
+        log.debug("Provider 启动完成 "+port);
         future.channel().closeFuture().sync();
     }
 
@@ -98,9 +101,9 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
             try {
                 ServiceRegistryHandler handler = new ServiceRegistryHandler();
                 ChannelFuture future = registryBootstrap(handler).connect("127.0.0.1", registryPort).sync();
-                future.channel().writeAndFlush(new RPCRequest(RPCRequest.TYPE.REGISTRY,clazz.getName(),null,null,null));
-                future.channel().closeFuture().sync();
-                System.out.println(handler.getResponse());
+                future.channel().writeAndFlush(new RPCRequest(RPCRequest.TYPE.REGISTRY,clazz.getAnnotation(RPCService.class).value(),null,null,null));
+                future.channel().closeFuture();
+                log.debug(""+handler.getResponse());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
