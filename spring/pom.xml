@@ -18,6 +18,7 @@
         <module>spring-bingo-customize-v2</module>
         <module>spring-orm-base-on-spring-jdbc</module>
         <module>spring-boot-quick</module>
+        <module>output-format-spring-boot-starter</module>
     </modules>
 
     <dependencies>
