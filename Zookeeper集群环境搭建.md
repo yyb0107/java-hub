@@ -128,6 +128,15 @@ java.net.NoRouteToHostException: No route to host (Host unreachable)
 #关闭防火漆的命名
 systemctl stop firewalld.service
 #关闭之后再次启动zookeeper
+
+
+#firewall-cmd --query-port=2888/tcp 如果为no
+#则可以通过将 2888和3888 端口加到开放端口
+firewall-cmd --add-port=2888/tcp --permanent
+firewall-cmd --add-port=3888/tcp --permanent
+#并重载入添加的端口：
+firewall-cmd --reload
+#再次查询端口开放情况，确定2888和3888开放
 ```
 
 > 网上也有说是和iptables有关，对我来说，关于linux网络设置还是有很多黑盒，暂且放下不提。
