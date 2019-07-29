@@ -15,6 +15,7 @@
         <module>thread-simple-demo</module>
         <module>rpc</module>
         <module>io</module>
+        <module>zookeeper-api-demo</module>
     </modules>
 
 
