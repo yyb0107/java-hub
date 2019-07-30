@@ -1,7 +1,7 @@
 package com.bingo.rpc.server;
 
-import com.bingo.rpc.api.RPCRequest;
 import com.bingo.rpc.server.annotation.RPCService;
+import com.bingo.rpc.server.zkregistry.ZkRegistry;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author Bingo
@@ -34,13 +35,15 @@ import java.util.Map;
  * @description: TODO
  * @date 2019/6/27  23:01
  */
-@Component//ps.这里的@Component可以不用声明，因为在Configuration类中，使用@Bean的方式会创建一个bean，默认情况下，在这里声明@Component会产生定义两次的问题，但是在@Bean中指定了name=RPCServer,这样@Component的这个会被忽略
+//@Component
+//ps.这里的@Component可以不用声明，因为在Configuration类中，使用@Bean的方式会创建一个bean，默认情况下，在这里声明@Component会产生定义两次的问题，但是在@Bean中指定了name=RPCServer,这样@Component的这个会被忽略
 @Slf4j
 public class RPCServer implements ApplicationContextAware, InitializingBean {
-    private int port ;
-    private int registryPort = 8080;
-    final Map<String,Object> nameMapService = new HashMap<String,Object>();
+    private int port;
+//    private int registryPort = 8080;
+    final Map<String, Object> nameMapService = new HashMap<String, Object>();
     Bootstrap bootstrap;
+    ServerBootstrap server;
 
     public RPCServer(int port) {
         this.port = port;
@@ -49,7 +52,7 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
     public void publisher() throws InterruptedException {
         EventLoopGroup boss = new NioEventLoopGroup();
         EventLoopGroup work = new NioEventLoopGroup();
-        ServerBootstrap server = new ServerBootstrap();
+        server = new ServerBootstrap();
         server.group(boss, work).channel(NioServerSocketChannel.class).childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel socketChannel) throws Exception {
@@ -65,10 +68,17 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
             }
         });
         ChannelFuture future = server.bind(port).sync();
-        log.debug("Provider 启动完成 "+port);
-        future.channel().closeFuture().sync();
+        log.debug("Provider 启动完成 " + port);
+//        future.channel().closeFuture().sync();
     }
 
+    /**
+     * 使用zk后，不再使用这么愚蠢的方式进行服务注册了
+     *
+     * @param handler
+     * @return
+     */
+    @Deprecated
     public Bootstrap registryBootstrap(ServiceRegistryHandler handler) {
         if (bootstrap != null) {
             return bootstrap;
@@ -86,7 +96,7 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
                 pipeline.addLast("encoder", new ObjectEncoder());
                 //对象参数类型解码器
                 pipeline.addLast("decoder", new ObjectDecoder(Integer.MAX_VALUE, ClassResolvers.cacheDisabled(null)));
-                pipeline.addLast("handler",handler );
+                pipeline.addLast("handler", handler);
             }
         });
         return bootstrap;
@@ -94,19 +104,20 @@ public class RPCServer implements ApplicationContextAware, InitializingBean {
 
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        Map<String,Object> maps = applicationContext.getBeansWithAnnotation(RPCService.class);
-        maps.forEach((key,bean)->{
+        Map<String, Object> maps = applicationContext.getBeansWithAnnotation(RPCService.class);
+        maps.forEach((key, bean) -> {
             Class<?> clazz = bean.getClass();
-            nameMapService.put(clazz.getAnnotation(RPCService.class).value(),bean);
-            try {
-                ServiceRegistryHandler handler = new ServiceRegistryHandler();
-                ChannelFuture future = registryBootstrap(handler).connect("127.0.0.1", registryPort).sync();
-                future.channel().writeAndFlush(new RPCRequest(RPCRequest.TYPE.REGISTRY,clazz.getAnnotation(RPCService.class).value(),null,null,null));
-                future.channel().closeFuture();
-                log.debug(""+handler.getResponse());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            nameMapService.put(clazz.getAnnotation(RPCService.class).value(), bean);
+            ServiceRegistryHandler handler = new ServiceRegistryHandler();
+//                这里进行服务注册的逻辑
+//                ChannelFuture future = registryBootstrap(handler).connect("127.0.0.1", registryPort).sync();
+//                future.channel().writeAndFlush(new RPCRequest(RPCRequest.TYPE.REGISTRY,clazz.getAnnotation(RPCService.class).value(),null,null,null));
+//                future.channel().closeFuture();
+//                log.debug(""+handler.getResponse());
+            String serviceName = clazz.getAnnotation(RPCService.class).value();
+            String serviceAddress = ZkRegistry.host() + ":" + port;
+            ZkRegistry.registry(serviceName, serviceAddress);
+            log.info("{}/{} registry success.",serviceName,serviceAddress);
         });
 
 

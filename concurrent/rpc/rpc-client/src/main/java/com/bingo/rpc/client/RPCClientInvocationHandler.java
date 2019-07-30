@@ -1,6 +1,7 @@
 package com.bingo.rpc.client;
 
 import com.bingo.rpc.api.RPCRequest;
+import com.bingo.rpc.client.discovery.ZKDiscovery;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -34,7 +35,11 @@ public class RPCClientInvocationHandler implements InvocationHandler {
         this.port = port;
     }
 
-    private RPCClientInvocationHandler(){}
+    private ZKDiscovery discovery;
+
+    public RPCClientInvocationHandler(){
+       discovery = new ZKDiscovery();
+    }
 
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
@@ -59,7 +64,13 @@ public class RPCClientInvocationHandler implements InvocationHandler {
                 }
             });
         }
-        ChannelFuture future = bootstrap.connect("127.0.0.1", 8080).sync();
+
+        log.info("{} method.getDeclaringClass().getSimpleName(){}",discovery,method.getDeclaringClass().getSimpleName());
+
+        String[] addressInfo = discovery.getServiceAddress(method.getDeclaringClass().getSimpleName()).split(":");
+        log.info("{}", addressInfo);
+//        ChannelFuture future = bootstrap.connect("127.0.0.1", 8080).sync();
+        ChannelFuture future = bootstrap.connect(addressInfo[0],Integer.parseInt(addressInfo[1])).sync();
         future.channel().writeAndFlush(new RPCRequest(method.getDeclaringClass().getSimpleName(),method.getName(), args, method.getParameterTypes())).sync();
         future.channel().closeFuture().sync();
 

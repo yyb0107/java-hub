@@ -11,9 +11,10 @@ import java.lang.reflect.Proxy;
  */
 public class RPCProxy {
 
-    public static <T> T proxy(Class<T> clazz,String host,int port){
+    public static <T> T proxy(Class<T> clazz){
 
-        T obj = (T)Proxy.newProxyInstance(clazz.getClassLoader(),new Class[]{clazz},new RPCClientInvocationHandler(host,port));
+        T obj = (T)Proxy.newProxyInstance(clazz.getClassLoader(),new Class[]{clazz},new RPCClientInvocationHandler());
         return obj;
     }
+
 }

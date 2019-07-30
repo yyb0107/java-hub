@@ -14,7 +14,9 @@ public class RPCClient {
         String host = "127.0.0.1";
         int port = 8080;
 
-       IUserService userService = RPCProxy.proxy(IUserService.class,host,port);
+//       IUserService userService = RPCProxy.proxy(IUserService.class,host,port);
+
+        IUserService userService = RPCProxy.proxy(IUserService.class);
 
         System.out.println(userService.sayHello("hello"));
     }

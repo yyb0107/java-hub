@@ -1,10 +1,7 @@
 package com.bingo.rpc.server;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.*;
 
 /**
  * @author Bingo
@@ -16,10 +13,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ComponentScan("com.bingo.rpc.server")
 public class RpcProviderStart {
-
-    @Bean(name="RPCServer")
+    @Bean
     RPCServer server(){
         return new RPCServer(8089);
+    }
+
+    @Primary
+    @Bean
+    RPCServer rpcServer2(){
+        return new RPCServer(8090);
     }
 
     public static void main(String[] args) {
