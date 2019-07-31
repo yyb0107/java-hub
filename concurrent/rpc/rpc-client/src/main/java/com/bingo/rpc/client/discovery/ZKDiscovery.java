@@ -55,13 +55,15 @@ public class ZKDiscovery {
     private String balanceAddress(List<String> address) {
         int size = address.size();
         Random random =new Random();
-        return address.get(random.nextInt()%size);
+        return address.get(random.nextInt(100)%size);
     }
 
     private void registryListener(String serviceName) {
         PathChildrenCache cache = new PathChildrenCache(curatorFramework, serviceName, true);
 
         cache.getListenable().addListener((curatorFramework,pathChildrenCacheEvent)->{
+            System.out.println("收到子节点变化通知");
+            System.out.println(pathChildrenCacheEvent);
             List<String> address = curatorFramework.getChildren().forPath(serviceName);
             repository.put(serviceName, address);
         });

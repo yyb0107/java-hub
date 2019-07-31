@@ -15,13 +15,13 @@ import org.springframework.context.annotation.*;
 public class RpcProviderStart {
     @Bean
     RPCServer server(){
-        return new RPCServer(8089);
+        return new RPCServer(8091);
     }
 
     @Primary
     @Bean
     RPCServer rpcServer2(){
-        return new RPCServer(8090);
+        return new RPCServer(8092);
     }
 
     public static void main(String[] args) {
