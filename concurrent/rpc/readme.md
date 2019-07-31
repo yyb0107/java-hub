@@ -16,3 +16,7 @@ rpc下四个Module
 启动顺序
 
 `rpc-registry`->`rpc-registry`->`rpc-client`
+
+**2019年7月30日更新**
+
+> 引入zookeeper,作为服务注册和服务发现的中间服务。修改server和client注册和发现服务的代码。
