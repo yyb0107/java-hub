@@ -13,6 +13,7 @@
         <module>spring</module>
         <module>mybatis</module>
         <module>concurrent</module>
+        <module>dubbo-demo</module>
     </modules>
 
     <name>java-hub</name>
