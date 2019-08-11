@@ -11,5 +11,16 @@
 
     <artifactId>demo-client</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.bingo.java</groupId>
+            <artifactId>demo-service-api</artifactId>
+        </dependency>
+    </dependencies>
+
 
 </project>
