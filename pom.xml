@@ -14,6 +14,7 @@
         <module>mybatis</module>
         <module>concurrent</module>
         <module>dubbo-demo</module>
+        <module>nacos-demo</module>
     </modules>
 
     <name>java-hub</name>
