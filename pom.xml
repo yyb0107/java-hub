@@ -16,6 +16,7 @@
         <module>dubbo-demo</module>
         <module>nacos-demo</module>
         <module>sentinel-demo</module>
+        <module>cache</module>
     </modules>
 
     <name>java-hub</name>
