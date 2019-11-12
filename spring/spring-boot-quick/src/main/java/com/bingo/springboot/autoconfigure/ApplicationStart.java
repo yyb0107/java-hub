@@ -15,7 +15,7 @@ public class ApplicationStart {
 //            System.out.println(name);
 //        }
         FormatService service =  application.getBean(FormatService.class);
-//        IFormatterService service = new XmlFormatterService();
+//        IFormatterService services = new XmlFormatterService();
         String out = service.format(new User("bingo","430321",18,"hunan"));
         System.out.println("结果是 ："+out);
     }

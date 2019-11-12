@@ -19,6 +19,7 @@
         <module>spring-orm-base-on-spring-jdbc</module>
         <module>spring-boot-quick</module>
         <module>output-format-spring-boot-starter</module>
+        <module>spring-boot-jpa</module>
     </modules>
 
     <dependencies>

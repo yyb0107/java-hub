@@ -5,6 +5,7 @@ import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 /**
@@ -14,7 +15,8 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @Aspect
-public class LoginAop {
+@Order(-2)
+public class LoginAspect2 {
     @Pointcut("execution(* com.bingo.java.spring.simple.step.UserService.login(*))")
     public void pointCut(){
 
@@ -26,7 +28,7 @@ public class LoginAop {
     @Before("pointCut()")
     public void beforeExcution(JoinPoint joinPoint){
 
-        System.out.println("aop 前置通知");
+        System.out.println("aop 前置通知"+this.getClass().getSimpleName());
 
     }
 
@@ -36,7 +38,7 @@ public class LoginAop {
      */
     @AfterReturning(returning = "result",pointcut = "pointCut()")
     public void afterReturning(Object result) throws Throwable{
-        System.out.println("aop 后置返回 "+result);
+        System.out.println(this.getClass().getSimpleName()+"aop 后置返回 "+result);
     }
 
 }
