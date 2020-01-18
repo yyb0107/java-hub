@@ -1,0 +1,14 @@
+server:
+  port: 7070
+spring:
+  application:
+    name: service-consumer-1
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9090/eureka
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
