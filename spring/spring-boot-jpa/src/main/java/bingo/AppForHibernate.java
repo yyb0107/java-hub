@@ -32,7 +32,24 @@ public class AppForHibernate {
     }
 
     @Bean
-    public CommandLineRunner springJpa(){
+    public CommandLineRunner springJpa4Update(){
+        return new CommandLineRunner() {
+            @Autowired
+            UserRepository repository;
+
+            @Override
+            public void run(String... args) throws Exception {
+                TUser user = new TUser();
+                user.setUserid(2);
+                user.setUsername("bingo-update");
+                TUser user2 = repository.save(user);
+                System.out.println(user2);
+            }
+        };
+    }
+
+//    @Bean
+    public CommandLineRunner springJpa4Query(){
         return new CommandLineRunner() {
             @Autowired
             UserRepository repository;

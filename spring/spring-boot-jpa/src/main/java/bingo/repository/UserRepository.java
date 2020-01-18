@@ -1,6 +1,7 @@
 package bingo.repository;
 
 import bingo.entity.TUser;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -12,5 +13,5 @@ import org.springframework.stereotype.Repository;
  * @date 2019/11/12  23:35
  */
 @Repository
-public interface UserRepository extends CrudRepository<TUser,Integer> {
+public interface UserRepository extends JpaRepository<TUser,Integer> {
 }

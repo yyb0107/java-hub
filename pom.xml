@@ -19,6 +19,7 @@
         <module>cache</module>
         <module>message-service</module>
         <module>spi-demo</module>
+        <module>spring-cloud-demo</module>
     </modules>
 
     <name>java-hub</name>
