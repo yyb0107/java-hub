@@ -15,6 +15,8 @@
         <module>spring-cloud-eureka-server</module>
         <module>spring-cloud-eureka-provider</module>
         <module>spring-cloud-eureka-consumer</module>
+        <module>spring-cloud-config-server</module>
+        <module>spring-cloud-config-client</module>
     </modules>
 
     <dependencyManagement>
@@ -22,7 +24,8 @@
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
-                <version>Greenwich.SR2</version>
+                <version>Greenwich.SR5</version>
+                <!-- Greenwich.SR2 -->
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
