@@ -15,7 +15,6 @@ import org.springframework.web.client.RestTemplate;
  * @date 2020/1/18  13:35
  */
 @SpringBootApplication
-@EnableEurekaClient
 public class EurekaConsumerApp {
     public static void main(String[] args) {
         new SpringApplicationBuilder().sources(EurekaConsumerApp.class).run(args);

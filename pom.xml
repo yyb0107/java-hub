@@ -17,9 +17,10 @@
         <module>nacos-demo</module>
         <module>sentinel-demo</module>
         <module>cache</module>
-        <module>message-service</module>
-        <module>spi-demo</module>
+        <!--<module>message-service</module>
+        <module>spi-demo</module>-->
         <module>spring-cloud-demo</module>
+        <module>redis-demo</module>
     </modules>
 
     <name>java-hub</name>

@@ -1,13 +1,11 @@
 package com.bingo.java.pattern.proxy.jdkproxy;
 
-import com.bingo.java.pattern.proxy.pojo.IPerson;
-import com.bingo.java.pattern.proxy.pojo.Person;
-import sun.misc.ProxyGenerator;
-
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.Proxy;
+import com.bingo.java.pattern.proxy.pojo.IPerson;
+import com.bingo.java.pattern.proxy.pojo.Person;
+import sun.misc.ProxyGenerator;
 
 /**
  * @author Bingo
@@ -30,7 +28,9 @@ public class JdkProxyTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        personProxy.findJob("jdk");
+//        personProxy.findJob("jdk");
+//        personProxy.hahaha("11111");
+        personProxy.toString();
     }
 
 }

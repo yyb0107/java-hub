@@ -14,6 +14,7 @@ import java.util.List;
  * @projectName java-hub
  */
 final class BGJdkDynamicAopProxy implements BGAopProxy, InvocationHandler, Serializable {
+  private static final long serialVersionUID = 1L;
     /**
      * Config used to configure this proxy.
      */

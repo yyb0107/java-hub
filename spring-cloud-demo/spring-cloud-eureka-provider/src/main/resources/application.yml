@@ -1,12 +1,16 @@
 server:
-  port: 8080
+  port: 0
 spring:
   application:
     name: service-provider-1
 eureka:
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.application.name}:${spring.cloud.client.ip-address}:${server.port}:${spring.application.instance_id:${random.int[0,20]}}
   client:
     serviceUrl:
-      defaultZone: http://localhost:9090/eureka
+      defaultZone: http://bingo:123456@spring-cloud.bingo.com/eureka
+#      defaultZone: http://bingo:123456@192.168.0.121:9090/eureka
 management:
   endpoints:
     web:

@@ -11,5 +11,10 @@ public class Person implements IPerson {
     public void findJob(String command){
         System.out.println("我在找工作...");
         System.out.println("command..."+command);
+        hahaha("");
+    }
+    
+    public void hahaha(String sth) {
+      System.out.println("hahahahaha");
     }
 }

@@ -7,11 +7,17 @@ eureka:
   client:
     registerWithEureka: false
     fetchRegistry: false
-    serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
-    enabled: true
+#    serviceUrl:
+#      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+#    enabled: true
 spring:
+  security:
+    user:
+      name: bingo
+      password: 123456
   application:
     name: eureka-server
+    
+
 
 

@@ -3,8 +3,8 @@ package com.bingo.spirng.cloud.consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import com.netflix.discovery.EurekaClient;
 
 /**
  * @author Bingo
@@ -17,6 +17,9 @@ import org.springframework.web.client.RestTemplate;
 public class HelloService {
     @Autowired
     RestTemplate restTemplate;
+    
+    @Autowired
+    private EurekaClient eurekaClient;
 
     private static final String PROVIDE_URL_PREFIX ="http://service-provider-1/hello";
 

@@ -24,7 +24,7 @@ public class LeaderSelectorDemo extends LeaderSelectorListenerAdapter implements
 
     LeaderSelector selector;
 
-    static String CONNECT_STRING = "192.168.1.110:2181,192.168.1.111:2181,192.168.1.112:2181";
+    static String CONNECT_STRING = "127.0.0.1:2181";//"192.168.1.110:2181,192.168.1.111:2181,192.168.1.112:2181";
 
     static {
 

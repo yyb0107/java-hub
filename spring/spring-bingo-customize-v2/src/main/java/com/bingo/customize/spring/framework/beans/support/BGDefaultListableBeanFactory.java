@@ -47,6 +47,12 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
     }
 
 
+    /**
+     * 实例初始化位置，如果存在aop  在这里进行处理
+     * @param beanName
+     * @param bd
+     * @return
+     */
     protected BGBeanWrapper instantiateBean(final String beanName, final BGBeanDefinition bd) {
         String className = bd.getBeanClassName();
         BGBeanWrapper bgBeanWrapper = null;
@@ -79,6 +85,12 @@ public abstract class BGDefaultListableBeanFactory implements BGBeanFactory {
     //TODO
     protected abstract BGAdvisedSupport instantionAopConfig(BGBeanDefinition bd);
 
+    /**
+     * 这段是自动注入
+     * @param beanName
+     * @param mbd
+     * @param bw
+     */
     protected void populateBean(String beanName, BGBeanDefinition mbd, BGBeanWrapper bw) {
         Class<? extends Annotation>[] annotationClass = new Class[]{BGController.class, BGService.class};
         Object obj = bw.getWrappedInstance();
